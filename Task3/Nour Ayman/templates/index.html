@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Booking Cancellation Prediction</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+      }
+      form {
+        display: inline-block;
+        text-align: left;
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.1);
+      }
+      input,
+      select {
+        margin-bottom: 10px;
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button {
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 5px;
+      }
+      button:hover {
+        background-color: #218838;
+      }
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Booking Cancellation Prediction</h2>
+    <form id="prediction-form">
+      <label>Number of Adults:</label>
+      <input type="number" id="adults" required />
+
+      <label>Number of Children:</label>
+      <input type="number" id="children" required />
+
+      <label>Number of Weekend Nights:</label>
+      <input type="number" id="weekend_nights" required />
+
+      <label>Number of Week Nights:</label>
+      <input type="number" id="week_nights" required />
+
+      <label>Lead Time:</label>
+      <input type="number" id="lead_time" required />
+
+      <label>Average Price:</label>
+      <input type="number" step="0.01" id="average_price" required />
+
+      <label>Special Requests:</label>
+      <input type="number" id="special_requests" required />
+
+      <label>Type of Meal:</label>
+      <input type="text" id="type_of_meal" required />
+
+      <label>Car Parking Space:</label>
+      <input type="number" id="car_parking_space" required />
+
+      <label>Room Type:</label>
+      <input type="text" id="room_type" required />
+
+      <label>Market Segment Type:</label>
+      <input type="text" id="market_segment_type" required />
+
+      <label>Repeated Guest:</label>
+      <input type="number" id="repeated" required />
+
+      <label>Previous Cancellations:</label>
+      <input type="number" id="P-C" required />
+
+      <label>Previous Not Cancellations:</label>
+      <input type="number" id="P-not-C" required />
+
+      <button type="button" onclick="predict()">Predict</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+      function predict() {
+        let data = {
+          "number of adults":
+            parseInt(document.getElementById("adults").value) || 0,
+          "number of children":
+            parseInt(document.getElementById("children").value) || 0,
+          "number of weekend nights":
+            parseInt(document.getElementById("weekend_nights").value) || 0,
+          "number of week nights":
+            parseInt(document.getElementById("week_nights").value) || 0,
+          "lead time":
+            parseInt(document.getElementById("lead_time").value) || 0,
+          "average price":
+            parseFloat(document.getElementById("average_price").value) || 0.0,
+          "special requests":
+            parseInt(document.getElementById("special_requests").value) || 0,
+          "type of meal": document.getElementById("type_of_meal").value || "",
+          "car parking space":
+            parseInt(document.getElementById("car_parking_space").value) || 0,
+          "room type": document.getElementById("room_type").value || "",
+          "market segment type":
+            document.getElementById("market_segment_type").value || "",
+          repeated: parseInt(document.getElementById("repeated").value) || 0,
+          "P-C": parseInt(document.getElementById("P-C").value) || 0,
+          "P-not-C": parseInt(document.getElementById("P-not-C").value) || 0,
+          adults_children:
+            (parseInt(document.getElementById("adults").value) || 0) *
+            (parseInt(document.getElementById("children").value) || 0),
+          weekend_weeknights:
+            (parseInt(document.getElementById("weekend_nights").value) || 0) *
+            (parseInt(document.getElementById("week_nights").value) || 0),
+          lead_time_squared: Math.pow(
+            parseInt(document.getElementById("lead_time").value) || 0,
+            2
+          ),
+          average_price_squared: Math.pow(
+            parseFloat(document.getElementById("average_price").value) || 0.0,
+            2
+          ),
+          total_nights:
+            (parseInt(document.getElementById("weekend_nights").value) || 0) +
+            (parseInt(document.getElementById("week_nights").value) || 0),
+          total_people:
+            (parseInt(document.getElementById("adults").value) || 0) +
+            (parseInt(document.getElementById("children").value) || 0),
+        };
+        console.log(data);
+
+        fetch("/predict", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.prediction !== undefined) {
+              document.getElementById("result").innerText =
+                "Prediction: " + data.prediction;
+            } else {
+              document.getElementById("result").innerText =
+                "Error: " + JSON.stringify(data);
+            }
+          })
+          .catch((error) => {
+            document.getElementById("result").innerText = "Error: " + error;
+            console.error("Error:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
