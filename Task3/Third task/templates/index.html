@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Form</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #670d10 0%, #092756 100%);
+            color: #fff;
+            font-size: 18px;
+            text-align: center;
+            letter-spacing: 1.2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 35px;
+            text-align: center;
+            align-items: center;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.3);
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 13px;
+            color: #fff;
+            border-radius: 4px;
+            box-shadow: inset 0 -5px 45px rgba(100,100,100,0.2), 0 1px 1px rgba(255,255,255,0.2);
+            transition: box-shadow 0.5s ease;
+        }
+
+        input:focus {
+            box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgba(255,255,255,0.2);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            color: #333;
+            background: linear-gradient(to bottom, #ffffff, #e6e6e6);
+            border: 1px solid #e6e6e6;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #d4d4d4;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Hotel Booking Prediction</h2>
+        <form action="/" method="post">
+            <input name="adults" type="text" placeholder="Number of Adults" required />
+            <input name="children" type="text" placeholder="Number of Children" required />
+            <input name="weekend_nights" type="text" placeholder="Number of Weekend Nights" required />
+            <input name="week_nights" type="text" placeholder="Number of Week Nights" required />
+            <input name="meal_type" type="text" placeholder="Meal Type" required />
+            <input name="parking" type="text" placeholder="Parking" required />
+            <input name="room_type" type="text" placeholder="Room Type" required />
+            <input name="lead_time" type="text" placeholder="Lead Time" required />
+            <input name="market_segment" type="text" placeholder="Market Segment" required />
+            <input name="repeated" type="text" placeholder="Repeated Guest (1 for Yes, 0 for No)" required />
+            <input name="p_c" type="text" placeholder="Probability of Cancellation" required />
+            <input name="p_not_c" type="text" placeholder="Probability of Not Cancellation" required />
+            <input name="price" type="text" placeholder="Price" required />
+            <input name="special_requests" type="text" placeholder="Special Requests" required />
+            <input class="btn" value="Predict" type="submit" />
+        </form>
+        
+        {% if result %}
+            <p>Prediction Results:</p>
+            <p>Booking Cancellation Prediction: 
+                {% if result['Cancellation Prediction'] == 'Likely to Cancel' %}
+                    Likely to Cancel
+                {% else %}
+                    Not Likely to Cancel
+                {% endif %}
+            </p>
+        {% endif %}
+        
+        {% if error %}
+            <p style="color: red;">Error: {{ error }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
