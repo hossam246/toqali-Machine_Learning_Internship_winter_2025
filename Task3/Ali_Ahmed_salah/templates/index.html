@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Hotel reservation canceled or not canceled</title>
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        .form-container {
+            display: flex;
+            gap: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .content {
+            max-width: 500px;
+            margin: auto;
+        }
+
+
+        .bg-img {
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-img">
+        <div class="content">
+
+            <body>
+
+                <h1>Hotel reservation canceled or not canceled</h1>
+                <form action="{{url_for('predict')}}" method="post">
+                    <div class='form-container'>
+                        <div class="column">
+                            <input type="text" name="Booking_ID" placeholder="Booking ID" required="required">
+                            <input type="text" name="number_of_adults" placeholder="Number of adults"
+                                required="required">
+                            <input type="text" name="number_of_children" placeholder="Number of children"
+                                required="required">
+                            <input type="text" name="number_of_weekend_nights" placeholder="Number of weekend nights"
+                                required="required">
+                            <input type="text" name="number_of_week_nights" placeholder="number of week nights"
+                                required="required">
+                            <input type="text" name="type_of_meal" placeholder="type_of_meal" required="required">
+                            <input type="text" name="car_parking_space" placeholder="car parking space"
+                                required="required">
+                            <input type="text" name="room_type" placeholder="room type" required="required">
+                        </div>
+                        <div class="column">
+                            <input type="text" name="lead_time" placeholder="lead time" required="required">
+                            <input type="text" name="market_segment_type" placeholder="market segment type"
+                                required="required">
+                            <input type="text" name="repeated" placeholder="repeated" required="required">
+                            <input type="text" name="P_C" placeholder="P-C" required="required">
+                            <input type="text" name="P_not_C" placeholder="P-not-C" required="required">
+                            <input type="text" name="average_price_" placeholder="average price" required="required">
+                            <input type="text" name="special_requests" placeholder="special requests"
+                                required="required">
+                            <input type="text" name="date_of_reservation" placeholder="date of reservation"
+                                required="required">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-large">Enter</button>
+                </form>
+                <br>
+                <br>
+                {{ prediction_text }}
+        </div>
+    </div>
+
+</html>
