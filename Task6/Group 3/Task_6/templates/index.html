@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+<head>
+    <meta charset="utf-8">
+    <title>Estimated fare amount</title>
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+
+    <style>
+        .form-container {
+            display: flex;
+            gap: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .column {
+            flex: 1;
+        }
+
+        .content {
+            max-width: 600px;
+            margin: auto;
+        }
+
+
+        .bg-img {
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-img">
+        <div class="content">
+
+            <body>
+                <h1>Estimated fare amount</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class='form-container'>
+                        <div class="column">
+                            <input type="text" name="User_ID" placeholder="User ID" required="required">
+                            <input type="text" name="User_Name" placeholder="User Name" required="required">
+                            <input type="text" name="Driver_Name" placeholder="Driver Name" required="required">
+                            <select name="Car_Condition">
+                                <option value="Very Good">Very Good</option>
+                                <option value="Bad">Bad</option>
+                                <option value="Good">Good</option>
+                                <option value="Excellent">Excellent</option>
+                            </select>
+                            <select name="Weather">
+                                <option value="sunny">sunny</option>
+                                <option value="cloudy">cloudy</option>
+                                <option value="rainy">rainy</option>
+                                <option value="stormy">stormy</option>
+                                <option value="windy">windy</option>
+                            </select>
+                        </div>
+                        <div class="column">
+                            <select name="Traffic_Condition">
+                                <option value="Congested Traffic">Congested Traffic</option>
+                                <option value="Dense Traffic">Dense Traffic</option>
+                                <option value="Flow Traffic">Flow Traffic</option>
+                            </select>
+                            <input type="text" name="key" placeholder="key" required="required">
+                            <input type="text" name="pickup_datetime" placeholder="pickup datetime" required="required">
+                            <input type="number" name="pickup_longitude" placeholder="pickup longitude" step='any'
+                                required="required">
+                            <input type="number" name="pickup_latitude" placeholder="pickup latitude" step='any'
+                                required="required">
+                        </div>
+                        <div class="column">
+                            <input type="number" name="dropoff_longitude" placeholder="dropoff longitude" step='any'
+                                required="required">
+                            <input type="number" name="dropoff_latitude" placeholder="dropoff latitude" step='any'
+                                required="required">
+                            <input type="number" name="passenger_count" placeholder="passenger count"
+                                required="required">
+                            <input type="number" name="hour" placeholder="hour" required="required">
+                            <input type="number" name="day" placeholder="day" required="required">
+                        </div>
+                        <div class="column">
+                            <input type="number" name="month" placeholder="month" required="required">
+                            <input type="number" name="weekday" placeholder="weekday" required="required">
+                            <input type="number" name="year" placeholder="year" required="required">
+                            <input type="number" name="jfk_dist" placeholder="jfk dist" step='any' required="required">
+                            <input type="number" name="ewr_dist" placeholder="ewr dist" step='any' required="required">
+                        </div>
+                        <div class="column">
+                            <input type="number" name="lga_dist" placeholder="lga dist" step='any' required="required">
+                            <input type="number" name="sol_dist" placeholder="sol dist" step='any' required="required">
+                            <input type="number" name="nyc_dist" placeholder="nyc dist" step='any' required="required">
+                            <input type="number" name="distance" placeholder="distance" step='any' required="required">
+                            <input type="number" name="bearing" placeholder="bearing" step='any' required="required">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block btn-large">Enter</button>
+                </form>
+                <br>
+                <br>
+                <h1>Predicted Fare Amount is {{result}}</h1>
+        </div>
+    </div>
+
+</html>
