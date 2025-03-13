@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fare Amount Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #003973, #E5E5BE);
+            color: #333;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 80%;
+            max-width: 400px;
+            margin: auto;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            background: #003973;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background: #00224D;
+        }
+        #result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #003973;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="h1">Fare Amount Prediction</h1>
+        {% if result %}
+            <h1>Predicted Fare Amount is {{result}} </h1>
+        {% endif %}
+        <form id="predictionForm" action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="user_id" placeholder="User ID" required>
+            <input type="text" name="user_name" placeholder="User Name" required>
+            <input type="text" name="driver_name" placeholder="Driver Name" required>
+            <select name="car_condition">
+                <option value="Excellent">Excellent</option>
+                <option value="Very Good">Very Good</option>
+                <option value="Good">Good</option>
+                <option value="Bad">Bad</option>
+            </select>
+            <select name="traffic_condition">
+                <option value="Flow Traffic">Flow Traffic</option>
+                <option value="Dense Traffic">Dense Traffic</option>
+                <option value="Congested Traffic">Congested Traffic</option>
+            </select>
+            <select name="weather">
+                <option value="sunny">Sunny</option>
+                <option value="windy">Windy</option>
+                <option value="cloudy">Cloudy</option>
+                <option value="rainy">Rainy</option>
+                <option value="stormy">Stormy</option>
+            </select>
+            <input type="text" name="pickup_longitude" placeholder="Pickup Longitude" required>
+            <input type="text" name="pickup_latitude" placeholder="Pickup Latitude" required>
+            <input type="text" name="dropoff_longitude" placeholder="Dropoff Longitude" required>
+            <input type="text" name="dropoff_latitude" placeholder="Dropoff Latitude" required>
+            <input type="text" name="passenger_count" placeholder="Passenger Count" required>
+            <input type="text" name="hour" placeholder="Hour" required>
+            <input type="text" name="day" placeholder="Day" required>
+            <input type="text" name="month" placeholder="Month" required>
+            <input type="text" name="year" placeholder="Year" required>
+            <input type="text" name="weekday" placeholder="Weekday" required>
+            <input type="text" name="distance" placeholder="Distance" required>
+            <input type="text" name="bearing" placeholder="Bearing" required>
+            <button class="btn" type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+</html>
