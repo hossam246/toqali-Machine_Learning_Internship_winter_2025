@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Taxi Fare Predictor</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --background: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui;
+            margin: 0;
+            padding: 2rem;
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            padding: 0.8rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+
+        button {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #e8f4fc;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .prediction-text {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Fare Predictor</h1>
+        
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Pickup Hour (0-23)</label>
+                    <input type="number" name="hour" min="0" max="23" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pickup Day (1-31)</label>
+                    <input type="number" name="day" min="1" max="31" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Pickup Month (1-12)</label>
+                    <input type="number" name="month" min="1" max="12" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Passengers</label>
+                    <input type="number" name="passenger_count" min="1" max="8" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Distance (miles)</label>
+                    <input type="number" step="0.1" name="distance" min="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label>JFK Distance</label>
+                    <input type="number" step="0.1" name="jfk_dist" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Car Condition</label>
+                    <select name="car_condition" required>
+                        <option value="Bad">Bad</option>
+                        <option value="Very Good">Very Good</option>
+                        <option value="Excellent">Excellent</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Weather</label>
+                    <select name="weather" required>
+                        <option value="clear">Clear</option>
+                        <option value="cloudy">Cloudy</option>
+                        <option value="rainy">Rainy</option>
+                        <option value="stormy">Stormy</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Traffic</label>
+                    <select name="traffic" required>
+                        <option value="Congested Traffic">Congested</option>
+                        <option value="Flow Traffic">Flowing</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit">Predict Fare →</button>
+        </form>
+
+        {% if prediction %}
+        <div class="result">
+            <p class="prediction-text">Predicted Fare: ${{ prediction }}</p>
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
