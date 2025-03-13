@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Fare prediction</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <div class="login">
+            <h1>Taxi Fare Prediction</h1>
+        <form action="result", method="post">
+            {% csrf_token %}
+            <input type="text" name="user_id" placeholder="User ID" required>
+            <input type="text" name="user_name" placeholder="User Name" required>
+            <input type="text" name="driver_name" placeholder="Driver Name" required>
+            <select name="car_condition" id="car_condition" required>
+                <option value='' disabled selected hidden>Car Condition</option>
+                <option value="Excellent">Excellent</option>
+                <option value="Very Good">Very Good</option>
+                <option value="Good">Good</option>
+                <option value="Bad">Bad</option>
+            </select>
+            <select name="weather" id="weather" required>
+                <option value='' disabled selected hidden>Weather</option>
+                <option value="Sunny">Sunny</option>
+                <option value="Cloudy">Cloudy</option>
+                <option value="Rainy">Rainy</option>
+                <option value="Stormy">Stormy</option>
+                <option value="Windy">Windy</option>
+            </select>
+            <select name="traffic_condition" id="traffic_condition" required>
+                <option value='' disabled selected hidden>Traffic Condition</option>
+                <option value="Congested">Congested</option>
+                <option value="Dense">Dense</option>
+                <option value="Flow">Flow</option>
+            </select>
+            <input type="number" name="pickup_longitude" placeholder="Pickup Longitude" step="0.000001" required>
+            <input type="number" name="pickup_latitude" placeholder="Pickup Latitude" step="0.000001" required>
+            <input type="number" name="dropoff_longitude" placeholder="Dropoff Longitude" step="0.000001" required>
+            <input type="number" name="dropoff_latitude" placeholder="Dropoff Latitude" step="0.000001" required>
+            <input type="number" name="passenger_count" placeholder="Passenger Count" required>
+            <input type="number" name="jfk_dist" placeholder="JFK Distance" step="0.01" required>
+            <input type="number" name="ewr_dist" placeholder="EWR Distance" step="0.01" required>
+            <input type="number" name="lga_dist" placeholder="LGA Distance" step="0.01" required>
+            <input type="number" name="sol_dist" placeholder="SOL Distance" step="0.01" required>
+            <input type="number" name="nyc_dist" placeholder="NYC Distance" step="0.01" required>
+            <input type="number" name="distance" placeholder="Total Distance" step="0.01" required>
+            <input type="number" name="bearing" placeholder="Bearing" step="0.01" required>
+
+            <button type="submit" class="btn btn-primary btn-block btn-large">Predict Status</button>
+        </form>
+        <br>
+        {{result}}
+        </div>
+    </body>
+</html>
