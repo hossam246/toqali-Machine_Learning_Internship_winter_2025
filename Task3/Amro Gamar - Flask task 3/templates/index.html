@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hotel Booking Cancellation Predictor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            gap: 20px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            width: 200px;
+            margin: 30px auto 0;
+            text-align: center;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .canceled {
+            background-color: #fadbd8;
+            border: 1px solid #e74c3c;
+        }
+        .not-canceled {
+            background-color: #d4efdf;
+            border: 1px solid #27ae60;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #dc3545;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            margin-top: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            color: #2c3e50;
+        }
+        .info-text {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .insights {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #ebf5fb;
+            border: 1px solid #3498db;
+        }
+        .insights h3 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+        .insights ul {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Hotel Booking Cancellation Predictor</h1>
+        
+        {% if error %}
+        <div class="error">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+        
+        {% if prediction %}
+        <div class="result {{ status_class }}">
+            <h2>Prediction: {{ prediction }}</h2>
+            <p>Confidence: {{ confidence }}</p>
+        </div>
+        
+        {% if insights %}
+        <div class="insights">
+            <h3>Key Insights:</h3>
+            <ul>
+                {% for insight in insights %}
+                <li>{{ insight }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endif %}
+        
+        <form action="/predict" method="post">
+            <h3 class="section-title">Booking Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="adults">Number of Adults</label>
+                    <input type="number" id="adults" name="adults" min="0" value="{{ form_data.adults if form_data else 2 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="children">Number of Children</label>
+                    <input type="number" id="children" name="children" min="0" value="{{ form_data.children if form_data else 0 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="weekend_nights">Weekend Nights</label>
+                    <input type="number" id="weekend_nights" name="weekend_nights" min="0" value="{{ form_data.weekend_nights if form_data else 1 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="week_nights">Week Nights</label>
+                    <input type="number" id="week_nights" name="week_nights" min="0" value="{{ form_data.week_nights if form_data else 2 }}" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="reservation_date">Reservation Date</label>
+                    <input type="date" id="reservation_date" name="reservation_date" value="{{ form_data.reservation_date if form_data else today }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="lead_time">Lead Time (Days)</label>
+                    <input type="number" id="lead_time" name="lead_time" min="0" value="{{ form_data.lead_time if form_data else 30 }}" required>
+                    <p class="info-text">Days between booking and arrival date</p>
+                </div>
+                <div class="form-group">
+                    <label for="avg_price">Average Price Per Night ($)</label>
+                    <input type="number" id="avg_price" name="avg_price" min="0" step="0.01" value="{{ form_data.avg_price if form_data else 120 }}" required>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Room & Meal Preferences</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="room_type">Room Type</label>
+                    <select id="room_type" name="room_type" required>
+                        <option value="Room_Type 1" {% if form_data and form_data.room_type == 'Room_Type 1' %}selected{% endif %}>Room Type 1</option>
+                        <option value="Room_Type 2" {% if form_data and form_data.room_type == 'Room_Type 2' %}selected{% endif %}>Room Type 2</option>
+                        <option value="Room_Type 3" {% if form_data and form_data.room_type == 'Room_Type 3' %}selected{% endif %}>Room Type 3</option>
+                        <option value="Room_Type 4" {% if form_data and form_data.room_type == 'Room_Type 4' %}selected{% endif %}>Room Type 4</option>
+                        <option value="Room_Type 5" {% if form_data and form_data.room_type == 'Room_Type 5' %}selected{% endif %}>Room Type 5</option>
+                        <option value="Room_Type 6" {% if form_data and form_data.room_type == 'Room_Type 6' %}selected{% endif %}>Room Type 6</option>
+                        <option value="Room_Type 7" {% if form_data and form_data.room_type == 'Room_Type 7' %}selected{% endif %}>Room Type 7</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="meal_type">Meal Type</label>
+                    <select id="meal_type" name="meal_type" required>
+                        <option value="Meal Plan 1" {% if form_data and form_data.meal_type == 'Meal Plan 1' %}selected{% endif %}>Meal Plan 1</option>
+                        <option value="Meal Plan 2" {% if form_data and form_data.meal_type == 'Meal Plan 2' %}selected{% endif %}>Meal Plan 2</option>
+                        <option value="Meal Plan 3" {% if form_data and form_data.meal_type == 'Meal Plan 3' %}selected{% endif %}>Meal Plan 3</option>
+                        <option value="Not Selected" {% if form_data and form_data.meal_type == 'Not Selected' %}selected{% endif %}>No Meal</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="car_parking">Car Parking Spaces</label>
+                    <input type="number" id="car_parking" name="car_parking" min="0" max="3" value="{{ form_data.car_parking if form_data else 0 }}" required>
+                </div>
+            </div>
+            
+            <h3 class="section-title">Guest History & Booking Channel</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="repeated">Repeated Guest</label>
+                    <select id="repeated" name="repeated" required>
+                        <option value="0" {% if form_data and form_data.repeated == '0' %}selected{% endif %}>No</option>
+                        <option value="1" {% if form_data and form_data.repeated == '1' %}selected{% endif %}>Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="prev_cancellations">Previous Cancellations</label>
+                    <input type="number" id="prev_cancellations" name="prev_cancellations" min="0" value="{{ form_data.prev_cancellations if form_data else 0 }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="prev_non_cancellations">Previous Non-Cancellations</label>
+                    <input type="number" id="prev_non_cancellations" name="prev_non_cancellations" min="0" value="{{ form_data.prev_non_cancellations if form_data else 0 }}" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="market_segment">Market Segment</label>
+                    <select id="market_segment" name="market_segment" required>
+                        <option value="Aviation" {% if form_data and form_data.market_segment == 'Aviation' %}selected{% endif %}>Aviation</option>
+                        <option value="Complementary" {% if form_data and form_data.market_segment == 'Complementary' %}selected{% endif %}>Complementary</option>
+                        <option value="Corporate" {% if form_data and form_data.market_segment == 'Corporate' %}selected{% endif %}>Corporate</option>
+                        <option value="Offline" {% if form_data and form_data.market_segment == 'Offline' %}selected{% endif %}>Offline</option>
+                        <option value="Online" {% if form_data and form_data.market_segment == 'Online' %}selected{% endif %}>Online</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="special_requests">Special Requests</label>
+                    <input type="number" id="special_requests" name="special_requests" min="0" max="5" value="{{ form_data.special_requests if form_data else 0 }}" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn">Predict Cancellation</button>
+        </form>
+    </div>
+</body>
+</html>
